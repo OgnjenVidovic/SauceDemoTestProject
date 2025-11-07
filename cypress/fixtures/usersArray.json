@@ -1,0 +1,32 @@
+[
+  {
+    "username": "standard_user",
+    "password": "secret_sauce",
+    "description": "Valid user with full access"
+  },
+  {
+    "username": "locked_out_user",
+    "password": "secret_sauce",
+    "description": "User who is locked out and cannot log in"
+  },
+  {
+    "username": "problem_user",
+    "password": "secret_sauce",
+    "description": "User who sees broken images and UI issues"
+  },
+  {
+    "username": "performance_glitch_user",
+    "password": "secret_sauce",
+    "description": "User with delayed responses and slowness"
+  },
+  {
+    "username": "error_user",
+    "password": "secret_sauce",
+    "description": "Simulates UI errors"
+  },
+  {
+    "username": "visual_user",
+    "password": "secret_sauce",
+    "description": "Triggers visual layout bugs"
+  }
+]
