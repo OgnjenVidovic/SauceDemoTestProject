@@ -1,10 +1,7 @@
 describe("inventory page tests",()=>{
     beforeEach(()=>{
         cy.visit("https://www.saucedemo.com/");
-        cy.fixture("users.json").then((data)=>{
-            cy.loginAs(data.standard.username,data.standard.password);
-            cy.url().should("equal","https://www.saucedemo.com/inventory.html");
-        })
+        
 
     })
     afterEach(()=>{
@@ -13,51 +10,58 @@ describe("inventory page tests",()=>{
         cy.logout();
         }
     })
-    it("all products exist and are visible",()=>{
-        cy.get("div[class='inventory_item']").should("exist").should("be.visible").should("have.length", 6)
+
+    it("standard user: all products exist and are visible",()=>{
+        cy.loginAsStandard();
+        cy.productsVisible();
     })
 
-     it("'all products have correct names ",()=>{
-
+    it("standard user: all products have correct names ",()=>{
+        cy.loginAsStandard();
+        cy.correctNames();
     })
 
-    it("'all products have correct prices ",()=>{
-
+    it("standard user: all products have correct prices ",()=>{
+        cy.loginAsStandard();
+        cy.correctPrices();
     })
 
-    it('all products have correct images',()=>{
-         cy.get('.inventory_item_img img').should('have.length', 6)
-         cy.fixture("inventory.json").then((inventory)=>{
-            for(let k=1;k<=6;k++){
-            cy.get('[data-test="inventory-list"] > :nth-child('+k+') > .inventory_item_img img').should('have.attr', 'src', inventory[k-1].source);
-        }
-        
-        })
+    it('standard user: all products have correct images',()=>{
+        cy.loginAsStandard();
+        cy.correctImages();
     })
 
-    it('all products have a functional "add to cart button"/"remove" button',()=>{
-        
-        cy.get("a div[class='inventory_item_name ']").should("exist").should("be.visible").should("have.length", 6)
-        cy.get('[data-test="inventory-item-description"] > .pricebar > [data-test="inventory-item-price"]').should("exist").should("be.visible").should("have.length", 6)
-        
-        
-        
-        for(let i=1;i<=6;i++){
-            cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .pricebar > button').click()
-            if(i==6){
-                cy.get(".shopping_cart_badge").should("have.text",6)
-                for(let j=1;j<=6;j++){
-                    cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').should("have.text","Remove");
-                    cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').click();
-                    cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').should("have.text","Add to cart");
-                    if(j==6){
-                        cy.get('[data-test="shopping-cart-link"]').should('not.have.attr', 'span')
-                    }
-                }
-            }
-        }
-
+    it('standard user: all products have a functional "add to cart button"/"remove" button',()=>{           
+        cy.loginAsStandard();
+        cy.functionalCartButton();
     })
+
+    it('standard user: dropdown menu for sorting products (option "Name(A-Z)" works correctly)',()=>{           
+        cy.loginAsStandard();
+        cy.get('.product_sort_container').select('az');
+        cy.checkSortingProductsAZ();
+    })
+
+    it('standard user: dropdown menu for sorting products (option "Name(Z-A)" works correctly)',()=>{
+        cy.loginAsStandard();
+        cy.get('.product_sort_container').select('za');
+        cy.checkSortingProductsZA();
+    })
+
+    it('standard user: dropdown menu for sorting products (option Price (low to high) works correctly)',()=>{
+        //cy.loginAsStandard();
+        //cy.get('.product_sort_container').select('lohi');
+    })
+
+    it('standard user: dropdown menu for sorting products (option Price (high to low) works correctly)',()=>{
+        //cy.loginAsStandard();
+        //cy.get('.product_sort_container').select('hilo');
+    })
+    
+    
+
+
+    
 
     
 })

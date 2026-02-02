@@ -74,4 +74,133 @@ Cypress.Commands.add('allSame',()=>{
                 expect(same).to.be.true;
 
             })
+
+             
 })
+
+Cypress.Commands.add('productsVisible',()=>{
+        cy.get("div[class='inventory_item']").should("exist").should("be.visible").should("have.length", 6)
+})
+
+Cypress.Commands.add('correctNames',()=>{
+        cy.fixture("inventory.json").then((inventory)=>{
+            for( let i=1;i<6;i++){
+            cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .inventory_item_label > :nth-child(1)').should('have.text', inventory[i-1].name);    
+        }
+        })
+})
+
+Cypress.Commands.add('correctPrices',()=>{
+        cy.get('[data-test="inventory-item-description"] > .pricebar > [data-test="inventory-item-price"]').should("exist").should("be.visible").should("have.length", 6)
+        cy.fixture("inventory.json").then((inventory)=>{
+            for( let i=1;i<6;i++){
+                cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .pricebar > [data-test="inventory-item-price"]').should("have.contain",inventory[i-1].price);
+      
+        }
+        })
+})
+
+Cypress.Commands.add('correctImages',()=>{
+        cy.get('.inventory_item_img img').should('have.length', 6)
+        cy.fixture("inventory.json").then((inventory)=>{
+            for(let k=1;k<=6;k++){
+            cy.get('[data-test="inventory-list"] > :nth-child('+k+') > .inventory_item_img img').should('have.attr', 'src', inventory[k-1].source);
+        }
+        
+        })
+})
+
+Cypress.Commands.add('functionalCartButton',()=>{
+                   
+        for(let i=1;i<=6;i++){
+            cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .pricebar > button').click()
+            if(i==6){
+                cy.get(".shopping_cart_badge").should("have.text",6)
+                for(let j=1;j<=6;j++){
+                    cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').should("have.text","Remove");
+                    cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').click();
+                    cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').should("have.text","Add to cart");
+                    if(j==6){
+                        cy.get('[data-test="shopping-cart-link"]').should('not.have.attr', 'span')
+                    }
+                }
+            }
+        }
+})
+
+Cypress.Commands.add('loginAsStandard',()=>{
+cy.fixture("users.json").then((data)=>{
+            cy.loginAs(data.standard.username,data.standard.password);
+                cy.url().should("equal","https://www.saucedemo.com/inventory.html");
+        })
+})
+Cypress.Commands.add('loginAsLocked',()=>{
+cy.fixture("users.json").then((data)=>{
+            cy.loginAs(data.locked_out.username,data.locked_out.password);
+            cy.get('[data-test="error"]').should("have.text","Epic sadface: Sorry, this user has been locked out.")
+        })
+})
+Cypress.Commands.add('loginAsProblem',()=>{
+cy.fixture("users.json").then((data)=>{
+            cy.loginAs(data.problem.username,data.problem.password);
+                cy.url().should("equal","https://www.saucedemo.com/inventory.html");
+                cy.allSame();
+        })
+})
+Cypress.Commands.add('loginAsError',()=>{
+cy.fixture("users.json").then((data)=>{
+            cy.loginAs(data.err.username,data.err.password);
+        })
+})
+Cypress.Commands.add('loginAsVisual',()=>{
+cy.fixture("users.json").then((data)=>{
+            cy.loginAs(data.visual.username,data.visual.password);
+                cy.url().should("equal","https://www.saucedemo.com/inventory.html");    
+                        cy.get('.inventory_item_img img').first().should('have.attr', 'src', '/static/media/sl-404.168b1cce10384b857a6f.jpg');
+        })
+})
+Cypress.Commands.add('loginAsPerformance',()=>{
+cy.fixture("users.json").then((data)=>{
+            cy.loginAs(data.performance_glitch.username,data.performance_glitch.password);
+        })
+})
+
+Cypress.Commands.add('checkSortingProductsAZ',()=>{
+        
+        cy.get(".inventory_item_name").then(($el)=>{
+            const sortedAZ=Cypress._.map($el,"innerText");
+            //for( let i=0;i<products.length;i++){
+            //    cy.log(products[i]);
+            //}
+            cy.wrap(sortedAZ).as('sortedAZ')
+        })
+        cy.get('@sortedAZ').then((sortedAZ) => {
+                const checkAZ = [...sortedAZ].sort((a, b) => a.localeCompare(b));
+                expect(sortedAZ,'The roducts were not sorted correctly from A to Z').to.deep.equal(checkAZ);
+                cy.wrap(checkAZ).as('checkAZ')
+            })
+
+        
+            //sortedAZ is the state array is in after user presses the sort button
+            //checkAZ is manually sorted array
+})
+
+Cypress.Commands.add('checkSortingProductsZA',()=>{
+        
+        cy.get(".inventory_item_name").then(($el)=>{
+            const sortedZA=Cypress._.map($el,"innerText");
+            //for( let i=0;i<products.length;i++){
+            //    cy.log(products[i]);
+            //}
+            cy.wrap(sortedZA).as('sortedZA')
+        })
+        cy.get('@sortedZA').then((sortedZA) => {
+                const checkZA = [...sortedZA].sort((a, b) => b.localeCompare(a));
+                expect(sortedZA,'The roducts were not sorted correctly from Z to A').to.deep.equal(checkZA);
+                cy.wrap(checkZA).as('checkZA')
+            })
+            //sortedAZ is the state array is in after user presses the sort button
+            //checkAZ is manually sorted array
+})
+
+
