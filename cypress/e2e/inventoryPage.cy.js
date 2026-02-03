@@ -21,6 +21,11 @@ describe("inventory page tests",()=>{
         cy.correctNames();
     })
 
+    it("standard user: all products have correct description",()=>{
+        cy.loginAsStandard();
+        cy.correctDesc();
+    })
+
     it("standard user: all products have correct prices ",()=>{
         cy.loginAsStandard();
         cy.correctPrices();
@@ -49,14 +54,38 @@ describe("inventory page tests",()=>{
     })
 
     it('standard user: dropdown menu for sorting products (option Price (low to high) works correctly)',()=>{
-        //cy.loginAsStandard();
-        //cy.get('.product_sort_container').select('lohi');
+        cy.loginAsStandard();
+        cy.get('.product_sort_container').select('lohi');
+        cy.checkSortingProductsLowToHigh();
+
     })
 
     it('standard user: dropdown menu for sorting products (option Price (high to low) works correctly)',()=>{
-        //cy.loginAsStandard();
-        //cy.get('.product_sort_container').select('hilo');
+        cy.loginAsStandard();
+        cy.get('.product_sort_container').select('hilo');
+        cy.checkSortingProductsHighToLow();
     })
+
+    it('standard user: all products have a correct name on their own page',()=>{
+        cy.loginAsStandard();
+        cy.checkProductNamesOnTheirPage();
+    })
+
+    it('standard user: all products have a correct description on their own page',()=>{
+        cy.loginAsStandard();
+        cy.checkProductDescriptionOnTheirPage();
+    })
+
+    it.skip('standard user: all products have correct price on their own page',()=>{
+
+    })
+
+    it.skip('standard user: all products have a functional "add to cart button"/"remove" button on their own page',()=>{           
+        
+    })
+
+
+
     
     
 

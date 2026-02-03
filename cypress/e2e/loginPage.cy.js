@@ -35,7 +35,7 @@ describe("login tests",()=>{
 
     it("login as visual user",()=>{
         cy.loginAsVisual();
-    }) //dodaj proveru za ostale slike
+    }) 
 
     it("login attempt with invalid credentials",()=>{
          

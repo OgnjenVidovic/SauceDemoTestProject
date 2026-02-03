@@ -50,21 +50,21 @@ Cypress.Commands.add('allSame',()=>{
                 const imageSources = [];
 
                 for( let i=0;i<$imgs.length;i++){
-                let src = $imgs[i].getAttribute('src');
-                imageSources.push(src);
-                cy.log(src);
+                        let src = $imgs[i].getAttribute('src');
+                        imageSources.push(src);
+                        cy.log(src);
                 }
                 
                 const firstImage = imageSources[0];
                 let same = true;
 
                 for (let i = 1; i < imageSources.length; i++) {
-                if (imageSources[i] !== firstImage) {
-                same = false;
-                break;
+                        if (imageSources[i] !== firstImage) {
+                        same = false;
+                        break;
+                        }
                 }
-            }
-             
+            
                 if (same) {
                         cy.log('All images are identical');
                 } else {
@@ -89,6 +89,16 @@ Cypress.Commands.add('correctNames',()=>{
         }
         })
 })
+
+Cypress.Commands.add('correctDesc',()=>{
+        cy.fixture("inventory.json").then((inventory)=>{
+            for( let i=1;i<6;i++){
+            cy.get('.inventory_item:nth-child('+i+') .inventory_item_desc').should('have.text', inventory[i-1].desc);    
+        }
+        })
+})
+
+
 
 Cypress.Commands.add('correctPrices',()=>{
         cy.get('[data-test="inventory-item-description"] > .pricebar > [data-test="inventory-item-price"]').should("exist").should("be.visible").should("have.length", 6)
@@ -169,14 +179,11 @@ Cypress.Commands.add('checkSortingProductsAZ',()=>{
         
         cy.get(".inventory_item_name").then(($el)=>{
             const sortedAZ=Cypress._.map($el,"innerText");
-            //for( let i=0;i<products.length;i++){
-            //    cy.log(products[i]);
-            //}
             cy.wrap(sortedAZ).as('sortedAZ')
         })
         cy.get('@sortedAZ').then((sortedAZ) => {
                 const checkAZ = [...sortedAZ].sort((a, b) => a.localeCompare(b));
-                expect(sortedAZ,'The roducts were not sorted correctly from A to Z').to.deep.equal(checkAZ);
+                expect(sortedAZ).to.deep.equal(checkAZ);
                 cy.wrap(checkAZ).as('checkAZ')
             })
 
@@ -189,18 +196,72 @@ Cypress.Commands.add('checkSortingProductsZA',()=>{
         
         cy.get(".inventory_item_name").then(($el)=>{
             const sortedZA=Cypress._.map($el,"innerText");
-            //for( let i=0;i<products.length;i++){
-            //    cy.log(products[i]);
+            //for( let i=0;i<sortedZA.length;i++){
+            //    cy.log(sortedZA[i]);
             //}
             cy.wrap(sortedZA).as('sortedZA')
         })
         cy.get('@sortedZA').then((sortedZA) => {
                 const checkZA = [...sortedZA].sort((a, b) => b.localeCompare(a));
-                expect(sortedZA,'The roducts were not sorted correctly from Z to A').to.deep.equal(checkZA);
+                expect(sortedZA).to.deep.equal(checkZA);
                 cy.wrap(checkZA).as('checkZA')
             })
-            //sortedAZ is the state array is in after user presses the sort button
-            //checkAZ is manually sorted array
 })
 
+Cypress.Commands.add('checkSortingProductsLowToHigh',()=>{
+        
+        cy.get('.inventory_item_price').then(($el) => {
+            const extractedEl = el => parseFloat(el.innerText.slice(1));
+            const sortedLowToHigh = Cypress._.map($el, extractedEl);
+            cy.wrap(sortedLowToHigh).as('sortedLowToHigh');
+            //for( let i=0;i<sortedLowToHigh.length;i++){
+            //    cy.log(sortedLowToHigh[i]);
+            //    } 
+        })
+        cy.get('@sortedLowToHigh').then((sortedLowToHigh)=>{
+            const checkLowToHigh = [...sortedLowToHigh].sort((a, b) => a - b)
+            cy.wrap(checkLowToHigh).as('checkLowToHigh');
+            expect(sortedLowToHigh).to.deep.equal(checkLowToHigh)
+        })
+})
 
+Cypress.Commands.add('checkSortingProductsHighToLow',()=>{
+        cy.get('.inventory_item_price').then(($el) => {
+            const extractedEl = el => parseFloat(el.innerText.replace('$',''));
+            const sortedHighToLow = Cypress._.map($el,extractedEl);
+            cy.wrap(sortedHighToLow).as('sortedHighToLow');
+        })
+        cy.get('@sortedHighToLow').then((sortedHighToLow)=>{
+            const checkHighToLow = [...sortedHighToLow].sort((a, b) => b - a)
+            cy.wrap(checkHighToLow).as('checkHighToLow');
+            expect(sortedHighToLow).to.deep.equal(checkHighToLow)
+        })
+})
+
+Cypress.Commands.add('checkProductNamesOnTheirPage',()=>{
+         cy.get(".inventory_item_name").then($els => {
+            const br = $els.length;
+            const names = Cypress._.map($els,"innerText");
+            for(let i=1;i<=br;i++){ 
+                cy.get('.inventory_item:nth-child('+i+') .inventory_item_name').click();//!!
+                cy.get('div[data-test="inventory-item-name"]').invoke('text').should("eq",names[i-1]); //it's text instead of innerText with invoke
+                cy.get('#back-to-products').click();
+                //cy.go('back') doesn't work because SauceDemo uses JS navigation, so clicking a title doesn’t create a real history entry
+            }
+            
+            })
+})
+
+Cypress.Commands.add('checkProductDescriptionOnTheirPage',()=>{
+        cy.get(".inventory_item_desc").then($els => {
+            const br = $els.length;
+            cy.wrap(br).as('br');
+            const desc = Cypress._.map($els,"innerText");
+            for(let i=1;i<=br;i++){ 
+                cy.get('.inventory_item:nth-child('+i+') .inventory_item_name').click();//!!
+                cy.get('div[data-test="inventory-item-desc"]').invoke('text').should("eq",desc[i-1]); 
+                cy.get('#back-to-products').click();
+                
+            }
+            })
+})
