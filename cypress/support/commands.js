@@ -47,24 +47,15 @@ Cypress.Commands.add('logout',()=>{
 Cypress.Commands.add('allSame',()=>{
             cy.get('.inventory_item_img img').should('have.length.gt', 0) // ensuring at least one image exists
             .then(($imgs)=>{
-                const imageSources = [];
-
-                for( let i=0;i<$imgs.length;i++){
-                        let src = $imgs[i].getAttribute('src');
-                        imageSources.push(src);
-                        cy.log(src);
-                }
-                
-                const firstImage = imageSources[0];
+                const br= $imgs.length;
+                const sources = Cypress._.map($imgs,"src");
                 let same = true;
-
-                for (let i = 1; i < imageSources.length; i++) {
-                        if (imageSources[i] !== firstImage) {
-                        same = false;
-                        break;
+                for( let i=0;i<br;i++){
+                        if(sources[0] !== sources[i]){
+                                same = false;
+                                break; 
                         }
-                }
-            
+                } 
                 if (same) {
                         cy.log('All images are identical');
                 } else {
@@ -84,58 +75,79 @@ Cypress.Commands.add('productsVisible',()=>{
 
 Cypress.Commands.add('correctNames',()=>{
         cy.fixture("inventory.json").then((inventory)=>{
-            for( let i=1;i<6;i++){
-            cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .inventory_item_label > :nth-child(1)').should('have.text', inventory[i-1].name);    
-        }
+                cy.get(".inventory_item_name").then(($el)=>{
+                        const br = $el.length;
+                        cy.wrap(br).as('br');
+                                for( let i=1;i<=br;i++){
+                                        cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .inventory_item_label > :nth-child(1)')
+                                        .should('have.text', inventory[i-1].name);    
+                                }
+                })
         })
 })
 
 Cypress.Commands.add('correctDesc',()=>{
         cy.fixture("inventory.json").then((inventory)=>{
-            for( let i=1;i<6;i++){
-            cy.get('.inventory_item:nth-child('+i+') .inventory_item_desc').should('have.text', inventory[i-1].desc);    
-        }
+                cy.get(".inventory_item_desc").then(($el)=>{
+                        const br = $el.length;
+                        cy.wrap(br).as('br');
+                                for( let i=1;i<=br;i++){
+                                cy.get('.inventory_item:nth-child('+i+') .inventory_item_desc').should('have.text', inventory[i-1].desc);    
+                                }
+                })
         })
 })
 
 
 
 Cypress.Commands.add('correctPrices',()=>{
-        cy.get('[data-test="inventory-item-description"] > .pricebar > [data-test="inventory-item-price"]').should("exist").should("be.visible").should("have.length", 6)
+        cy.get('[data-test="inventory-item-description"] > .pricebar > [data-test="inventory-item-price"]').should('have.length.gt', 0)
         cy.fixture("inventory.json").then((inventory)=>{
-            for( let i=1;i<6;i++){
-                cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .pricebar > [data-test="inventory-item-price"]').should("have.contain",inventory[i-1].price);
-      
-        }
+                cy.get('[data-test="inventory-item-description"] > .pricebar > [data-test="inventory-item-price"]').then(($el)=>{
+                        const br = $el.length;
+                        cy.wrap(br).as('br');    
+                                for( let i=1;i<=br;i++){
+                                cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .pricebar > [data-test="inventory-item-price"]')
+                                .should("have.contain",inventory[i-1].price);
+                                }
+                })
         })
 })
 
 Cypress.Commands.add('correctImages',()=>{
-        cy.get('.inventory_item_img img').should('have.length', 6)
+        cy.get('.inventory_item_img img').should('have.length.gt', 0)
         cy.fixture("inventory.json").then((inventory)=>{
-            for(let k=1;k<=6;k++){
-            cy.get('[data-test="inventory-list"] > :nth-child('+k+') > .inventory_item_img img').should('have.attr', 'src', inventory[k-1].source);
-        }
-        
+                cy.get(".inventory_item_img img").then(($el)=>{
+                        const br = $el.length;
+                        cy.wrap(br).as('br');
+                                for(let k=1;k<=br;k++){
+                                cy.get('[data-test="inventory-list"] > :nth-child('+k+') > .inventory_item_img img')
+                                .should('have.attr', 'src', inventory[k-1].source);
+                                }
+                })
         })
 })
 
 Cypress.Commands.add('functionalCartButton',()=>{
-                   
-        for(let i=1;i<=6;i++){
-            cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .pricebar > button').click()
-            if(i==6){
-                cy.get(".shopping_cart_badge").should("have.text",6)
-                for(let j=1;j<=6;j++){
+            
+        cy.get(".inventory_item_name").then(($el)=>{
+            const br = $el.length;
+            cy.wrap(br).as('br');
+                for(let i=1;i<=br;i++){
+                        cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .pricebar > button').click()
+                if(i==br){
+                        cy.get(".shopping_cart_badge").should("have.text",br)
+                for(let j=1;j<=br;j++){
                     cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').should("have.text","Remove");
                     cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').click();
                     cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').should("have.text","Add to cart");
-                    if(j==6){
+                    if(j==br){
                         cy.get('[data-test="shopping-cart-link"]').should('not.have.attr', 'span')
                     }
                 }
             }
         }
+        })
 })
 
 Cypress.Commands.add('loginAsStandard',()=>{
@@ -239,6 +251,20 @@ Cypress.Commands.add('checkSortingProductsHighToLow',()=>{
 })
 
 Cypress.Commands.add('checkProductNamesOnTheirPage',()=>{
+        cy.fixture("inventory.json").then((inventory)=>{
+                cy.get(".inventory_item_name").then($els => {
+                        const br = $els.length;
+                        for(let i=1;i<=br;i++){ 
+                        cy.get('.inventory_item:nth-child('+i+') .inventory_item_name').click();//!!
+                        cy.get('div[data-test="inventory-item-name"]').invoke('text').should("eq",inventory[i-1].name); //it's text instead of innerText with invoke
+                        cy.get('#back-to-products').click();
+                //cy.go('back') doesn't work because SauceDemo uses JS navigation, so clicking a title doesn’t create a real history entry
+                        }
+                })
+        })
+})
+
+/*Cypress.Commands.add('checkProductNamesOnTheirPage1',()=>{
          cy.get(".inventory_item_name").then($els => {
             const br = $els.length;
             const names = Cypress._.map($els,"innerText");
@@ -250,13 +276,16 @@ Cypress.Commands.add('checkProductNamesOnTheirPage',()=>{
             }
             
             })
-})
-
-Cypress.Commands.add('checkProductDescriptionOnTheirPage',()=>{
+})*/
+//decided to scrap these because names and descriptions on inventory page might be incorrect for some users, but I'm keeping them as comments in case i need them later
+/*Cypress.Commands.add('checkProductDescriptionOnTheirPage1',()=>{
         cy.get(".inventory_item_desc").then($els => {
             const br = $els.length;
             cy.wrap(br).as('br');
             const desc = Cypress._.map($els,"innerText");
+                //const prices = Cypress._.map($el, el =>
+                //parseFloat(el.innerText.replace('$', ''))
+                //) 
             for(let i=1;i<=br;i++){ 
                 cy.get('.inventory_item:nth-child('+i+') .inventory_item_name').click();//!!
                 cy.get('div[data-test="inventory-item-desc"]').invoke('text').should("eq",desc[i-1]); 
@@ -264,4 +293,61 @@ Cypress.Commands.add('checkProductDescriptionOnTheirPage',()=>{
                 
             }
             })
+              not in use but might need later
+})*/
+
+Cypress.Commands.add('checkProductDescriptionOnTheirPage',()=>{
+        cy.fixture("inventory.json").then((inventory)=>{
+        cy.get(".inventory_item_desc").then($els => {
+            const br = $els.length;
+            cy.wrap(br).as('br');
+            for(let i=1;i<=br;i++){ 
+                cy.get('.inventory_item:nth-child('+i+') .inventory_item_name').click();//!!
+                cy.get('div[data-test="inventory-item-desc"]').invoke('text').should("eq",inventory[i-1].desc); 
+                cy.get('#back-to-products').click();
+            }
+            })
+        })
+})
+
+Cypress.Commands.add('checkProductPriceOnTheirPage',()=>{
+        cy.fixture("inventory.json").then((inventory)=>{
+            cy.get(".inventory_item_desc").then($els => {
+                const br = $els.length;
+                cy.wrap(br).as('br');
+                for(let i=1;i<=br;i++){ 
+                    cy.get('.inventory_item:nth-child('+i+') .inventory_item_name').click();//!!
+                    cy.get('div[data-test="inventory-item-price"]').should("have.text",inventory[i-1].price); 
+                    cy.get('#back-to-products').click();
+                }
+            })
+        })
+})
+
+Cypress.Commands.add('checkAddToCartButtonOnProductPage',()=>{
+        cy.get("#react-burger-menu-btn").click();
+        cy.get("#reset_sidebar_link").click();
+        cy.get(".inventory_item_name").then(($el)=>{
+            const br = $el.length;
+            cy.wrap(br).as('br');
+       
+            for(let i=1;i<=br;i++){
+                cy.get('.inventory_item:nth-child('+i+') .inventory_item_name').click();
+                cy.get('[data-test="add-to-cart"]').click();
+                cy.get('#back-to-products').click();
+                cy.get(':nth-child('+i+') > [data-test="inventory-item-description"] > .pricebar > button').should("have.text","Remove");                   
+                    if(i==br){
+                        cy.get(".shopping_cart_badge").should("have.text",br)
+                    }   
+            }     
+            for(let j=1;j<=br;j++){
+                cy.get('.inventory_item:nth-child('+j+') .inventory_item_name').click();
+                cy.get('[data-test="remove"]').click();
+                cy.get('#back-to-products').click();
+                cy.get(':nth-child('+j+') > [data-test="inventory-item-description"] > .pricebar > button').should("have.text","Add to cart");
+                    if(j==br){
+                        cy.get('[data-test="shopping-cart-link"]').should('not.have.attr', 'span');
+                    }
+            }
+        })
 })

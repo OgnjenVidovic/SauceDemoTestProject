@@ -76,12 +76,14 @@ describe("inventory page tests",()=>{
         cy.checkProductDescriptionOnTheirPage();
     })
 
-    it.skip('standard user: all products have correct price on their own page',()=>{
-
+    it('standard user: all products have correct price on their own page',()=>{
+        cy.loginAsStandard();
+        cy.checkProductPriceOnTheirPage();
     })
 
-    it.skip('standard user: all products have a functional "add to cart button"/"remove" button on their own page',()=>{           
-        
+    it('standard user: all products have a functional "add to cart button"/"remove" button on their own page',()=>{           
+        cy.loginAsStandard();
+        cy.checkAddToCartButtonOnProductPage();
     })
 
 
