@@ -25,12 +25,12 @@ describe("login tests",()=>{
 
     it("login as performance glitch user",()=>{ 
         cy.loginAsPerformance();
-        cy.url().should("equal","https://www.saucedemo.com/inventory.html");   //figure out         
+        cy.url().should("equal","https://www.saucedemo.com/inventory.html");           
     })
 
     it("login as error user",()=>{
         cy.loginAsError();
-        cy.url().should("equal","https://www.saucedemo.com/inventory.html");//figure out
+        cy.url().should("equal","https://www.saucedemo.com/inventory.html");    
     })
 
     it("login as visual user",()=>{

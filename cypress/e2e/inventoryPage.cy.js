@@ -202,7 +202,7 @@ describe("inventory page tests",()=>{
     })
 
 // error user
-    it("error user: all buttons on the side bar menu work correctly",()=>{
+    it.only("error user: all buttons on the side bar menu work correctly",()=>{
         cy.loginAsError();
         cy.checkSideBar();
     })

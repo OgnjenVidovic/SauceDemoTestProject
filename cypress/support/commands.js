@@ -153,47 +153,59 @@ Cypress.Commands.add('functionalCartButton',()=>{
 })
 
 Cypress.Commands.add('loginAsStandard',()=>{
-cy.fixture("users.json").then((data)=>{
-            cy.loginAs(data.standard.username,data.standard.password);
+        cy.fixture("users.json").then((data)=>{
+                cy.loginAs(data.standard.username,data.standard.password);
                 cy.url().should("equal","https://www.saucedemo.com/inventory.html");
         })
 })
 Cypress.Commands.add('loginAsLocked',()=>{
-cy.fixture("users.json").then((data)=>{
-            cy.loginAs(data.locked_out.username,data.locked_out.password);
-            cy.get('[data-test="error"]').should("have.text","Epic sadface: Sorry, this user has been locked out.")
+        cy.fixture("users.json").then((data)=>{
+                cy.loginAs(data.locked_out.username,data.locked_out.password);
+                cy.get('[data-test="error"]').should("have.text","Epic sadface: Sorry, this user has been locked out.")
         })
 })
 Cypress.Commands.add('loginAsProblem',()=>{
-cy.fixture("users.json").then((data)=>{
-            cy.loginAs(data.problem.username,data.problem.password);
+        cy.fixture("users.json").then((data)=>{
+                cy.loginAs(data.problem.username,data.problem.password);
                 cy.url().should("equal","https://www.saucedemo.com/inventory.html");
                 cy.allSame();
         })
 })
 Cypress.Commands.add('loginAsError',()=>{
-cy.fixture("users.json").then((data)=>{
-            cy.loginAs(data.err.username,data.err.password);
+        cy.fixture("users.json").then((data)=>{
+                cy.loginAs(data.err.username,data.err.password);
+                cy.get('.product_sort_container').select('za');
+                cy.on('window:alert', (alertText) => {
+                        expect(alertText).to.eq('Sorting is broken! This error has been reported to Backtrace.');
+                });
         })
 })
 Cypress.Commands.add('loginAsVisual',()=>{
 cy.fixture("users.json").then((data)=>{
-            cy.loginAs(data.visual.username,data.visual.password);
+        cy.loginAs(data.visual.username,data.visual.password);
                 cy.url().should("equal","https://www.saucedemo.com/inventory.html");    
-                        cy.get('.inventory_item_img img').first().should('have.attr', 'src', '/static/media/sl-404.168b1cce10384b857a6f.jpg');
+                cy.get('.inventory_item_img img').first().should('have.attr', 'src', '/static/media/sl-404.168b1cce10384b857a6f.jpg');
         })
 })
 Cypress.Commands.add('loginAsPerformance',()=>{
-cy.fixture("users.json").then((data)=>{
-            cy.loginAs(data.performance_glitch.username,data.performance_glitch.password);
+        cy.fixture("users.json").then((data)=>{
+                const start = Date.now();    
+                cy.loginAs(data.performance_glitch.username,data.performance_glitch.password);
+                cy.get('.inventory_item', { timeout: 10000 }).should('exist').then(() => {
+                        const duration = Date.now() - start;
+                        cy.log("UI load time: "+duration+"ms");
+
+                        expect(duration).to.be.greaterThan(5000);
+  });
+            
         })
 })
 
 Cypress.Commands.add('checkSortingProductsAZ',()=>{
         
         cy.get(".inventory_item_name").then(($el)=>{
-            const sortedAZ=Cypress._.map($el,"innerText");
-            cy.wrap(sortedAZ).as('sortedAZ')
+                const sortedAZ=Cypress._.map($el,"innerText");
+                cy.wrap(sortedAZ).as('sortedAZ')
         })
         cy.get('@sortedAZ').then((sortedAZ) => {
                 const checkAZ = [...sortedAZ].sort((a, b) => a.localeCompare(b));
@@ -209,11 +221,11 @@ Cypress.Commands.add('checkSortingProductsAZ',()=>{
 Cypress.Commands.add('checkSortingProductsZA',()=>{
         
         cy.get(".inventory_item_name").then(($el)=>{
-            const sortedZA=Cypress._.map($el,"innerText");
-            //for( let i=0;i<sortedZA.length;i++){
-            //    cy.log(sortedZA[i]);
-            //}
-            cy.wrap(sortedZA).as('sortedZA')
+                const sortedZA=Cypress._.map($el,"innerText");
+                //for( let i=0;i<sortedZA.length;i++){
+                //    cy.log(sortedZA[i]);
+                //}
+                cy.wrap(sortedZA).as('sortedZA')
         })
         cy.get('@sortedZA').then((sortedZA) => {
                 const checkZA = [...sortedZA].sort((a, b) => b.localeCompare(a));
