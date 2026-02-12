@@ -11,7 +11,7 @@ describe("inventory page tests",()=>{
             }
         }
     });
-/*      
+     
 // standard user
     it("standard user: all buttons on the side bar menu work correctly",()=>{
         cy.loginAsStandard();
@@ -200,7 +200,7 @@ describe("inventory page tests",()=>{
         cy.resetAppStateButton();
         cy.checkAddToCartButtonOnProductPage();
     })
-*/ 
+
 // error user
     it("error user: all buttons on the side bar menu work correctly",()=>{
         cy.loginAsError();
