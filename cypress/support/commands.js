@@ -41,7 +41,8 @@ Cypress.Commands.add('loginAs',(username, password)=>{
 
 Cypress.Commands.add('logout',()=>{
             cy.get("#react-burger-menu-btn").click();
-            cy.get('[data-test="logout-sidebar-link"]').click();
+            //cy.get('[data-test="logout-sidebar-link"]').click();
+            cy.get('#logout_sidebar_link').click({ force: true });
 })
 
 Cypress.Commands.add('allSame',()=>{
@@ -70,7 +71,8 @@ Cypress.Commands.add('allSame',()=>{
 })
 
 Cypress.Commands.add('productsVisible',()=>{
-        cy.get("div[class='inventory_item']").should("exist").should("be.visible").should("have.length", 6)
+        let pass = true;
+cy.get("div[class='inventory_item']").should("exist").should("be.visible").should("have.length", 6)
 })
 
 Cypress.Commands.add('correctNames',()=>{
@@ -197,7 +199,7 @@ Cypress.Commands.add('checkSortingProductsAZ',()=>{
                 const checkAZ = [...sortedAZ].sort((a, b) => a.localeCompare(b));
                 expect(sortedAZ).to.deep.equal(checkAZ);
                 cy.wrap(checkAZ).as('checkAZ')
-            })
+        })
 
         
             //sortedAZ is the state array is in after user presses the sort button
@@ -351,3 +353,29 @@ Cypress.Commands.add('checkAddToCartButtonOnProductPage',()=>{
             }
         })
 })
+
+Cypress.Commands.add('resetAppStateButton',()=>{
+
+        cy.get("#react-burger-menu-btn").click();
+        cy.get("#reset_sidebar_link").click();
+        cy.get("#react-burger-cross-btn").click();
+        cy.get(".shopping_cart_badge").should("not.exist");
+
+})
+
+
+Cypress.Commands.add('checkSideBar',()=>{
+
+        cy.get("#react-burger-menu-btn").click();
+        cy.get("#about_sidebar_link").should("have.attr", "href").and("include", "saucelabs.com");
+        cy.get("#react-burger-cross-btn").click();
+
+        cy.get("#react-burger-menu-btn").click();
+        cy.get("#inventory_sidebar_link").click();
+        cy.get("#react-burger-cross-btn").click();
+        cy.url().should("eq","https://www.saucedemo.com/inventory.html");
+        
+        cy.resetAppStateButton();
+
+})
+
