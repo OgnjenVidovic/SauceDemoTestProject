@@ -11,44 +11,40 @@ describe("inventory page tests",()=>{
             }
         }
     });
-     
+   
 // standard user
     it("standard user: all buttons on the side bar menu work correctly",()=>{
         cy.loginAsStandard();
         cy.checkSideBar();
     })
 
-    it("standard user: all products exist and are visible",()=>{
+    it.only("standard user: all elements exist and are visible",()=>{
         cy.loginAsStandard();
-        cy.resetAppStateButton();
-        cy.productsVisible();
+        cy.elementsExistVisible();
+        
     })
 
     it("standard user: all products have correct names ",()=>{
         cy.loginAsStandard();
-        cy.resetAppStateButton();
         cy.correctNames();
     })
 
     it("standard user: all products have correct description",()=>{
         cy.loginAsStandard();
-        cy.resetAppStateButton();
         cy.correctDesc();
     })
 
     it("standard user: all products have correct prices ",()=>{
         cy.loginAsStandard();
-        cy.resetAppStateButton();
         cy.correctPrices();
     })
 
     it('standard user: all products have correct images',()=>{
         cy.loginAsStandard();
-        cy.resetAppStateButton();
         cy.correctImages();
     })
 
-    it('standard user: all products have a functional "add to cart button"/"remove" button',()=>{           
+    it('standard user: all products have a functional "add to cart" button/"remove" button',()=>{           
         cy.loginAsStandard();
         cy.resetAppStateButton();
         cy.functionalCartButton();
@@ -85,24 +81,22 @@ describe("inventory page tests",()=>{
 
     it('standard user: all products have a correct name on their own page',()=>{
         cy.loginAsStandard();
-        cy.resetAppStateButton();
         cy.checkProductNamesOnTheirPage();
     })
 
     it('standard user: all products have a correct description on their own page',()=>{
         cy.loginAsStandard();
-        cy.resetAppStateButton();
         cy.checkProductDescriptionOnTheirPage();
     })
 
     it('standard user: all products have correct price on their own page',()=>{
         cy.loginAsStandard();
-        cy.resetAppStateButton();
         cy.checkProductPriceOnTheirPage();
     })
 
     it('standard user: all products have a functional "add to cart button"/"remove" button on their own page',()=>{           
         cy.loginAsStandard();
+        cy.resetAppStateButton();
         cy.checkAddToCartButtonOnProductPage();
     })
 // problem user
@@ -114,31 +108,26 @@ describe("inventory page tests",()=>{
 
     it("problem user: all products exist and are visible",()=>{
         cy.loginAsProblem();
-        cy.resetAppStateButton();
         cy.productsVisible();
     })
 
     it("problem user: all products have correct names ",()=>{
         cy.loginAsProblem();
-        cy.resetAppStateButton();
         cy.correctNames();
     })
 
     it("problem user: all products have correct description",()=>{
         cy.loginAsProblem();
-        cy.resetAppStateButton();
         cy.correctDesc();
     })
 
     it("problem user: all products have correct prices ",()=>{
         cy.loginAsProblem();
-        cy.resetAppStateButton();
         cy.correctPrices();
     })
 
     it('problem user: all products have correct images',()=>{
         cy.loginAsProblem();
-        cy.resetAppStateButton();
         cy.correctImages();
     })
 
@@ -179,19 +168,16 @@ describe("inventory page tests",()=>{
 
     it('problem user: all products have a correct name on their own page',()=>{
         cy.loginAsProblem();
-        cy.resetAppStateButton();
         cy.checkProductNamesOnTheirPage();
     })
 
     it('problem user: all products have a correct description on their own page',()=>{
         cy.loginAsProblem();
-        cy.resetAppStateButton();
         cy.checkProductDescriptionOnTheirPage();
     })
 
     it('problem user: all products have correct price on their own page',()=>{
         cy.loginAsProblem();
-        cy.resetAppStateButton();
         cy.checkProductPriceOnTheirPage();
     })
 
@@ -202,38 +188,33 @@ describe("inventory page tests",()=>{
     })
 
 // error user
-    it.only("error user: all buttons on the side bar menu work correctly",()=>{
+    it("error user: all buttons on the side bar menu work correctly",()=>{
         cy.loginAsError();
         cy.checkSideBar();
     })
 
     it("error user: all products exist and are visible",()=>{
         cy.loginAsError();
-        cy.resetAppStateButton();
         cy.productsVisible();
     })
 
     it("error user: all products have correct names ",()=>{
         cy.loginAsError();
-        cy.resetAppStateButton();
         cy.correctNames();
     })
 
     it("error user: all products have correct description",()=>{
         cy.loginAsError();
-        cy.resetAppStateButton();
         cy.correctDesc();
     })
 
     it("error user: all products have correct prices ",()=>{
         cy.loginAsError();
-        cy.resetAppStateButton();
         cy.correctPrices();
     })
 
     it('error user: all products have correct images',()=>{
         cy.loginAsError();
-        cy.resetAppStateButton();
         cy.correctImages();
     })
 
@@ -274,19 +255,16 @@ describe("inventory page tests",()=>{
 
     it('error user: all products have a correct name on their own page',()=>{
         cy.loginAsError();
-        cy.resetAppStateButton();
         cy.checkProductNamesOnTheirPage();
     })
 
     it('error user: all products have a correct description on their own page',()=>{
         cy.loginAsError();
-        cy.resetAppStateButton();
         cy.checkProductDescriptionOnTheirPage();
     })
 
     it('error user: all products have correct price on their own page',()=>{
         cy.loginAsError();
-        cy.resetAppStateButton();
         cy.checkProductPriceOnTheirPage();
     })
 
@@ -304,31 +282,26 @@ describe("inventory page tests",()=>{
 
     it("visual user: all products exist and are visible",()=>{
         cy.loginAsVisual();
-        cy.resetAppStateButton();
         cy.productsVisible();
     })
 
     it("visual user: all products have correct names ",()=>{
         cy.loginAsVisual();
-        cy.resetAppStateButton();
         cy.correctNames();
     })
 
     it("visual user: all products have correct description",()=>{
         cy.loginAsVisual();
-        cy.resetAppStateButton();
         cy.correctDesc();
     })
 
     it("visual user: all products have correct prices ",()=>{
         cy.loginAsVisual();
-        cy.resetAppStateButton();
         cy.correctPrices();
     })
 
     it('visual user: all products have correct images',()=>{
         cy.loginAsVisual();
-        cy.resetAppStateButton();
         cy.correctImages();
     })
 
@@ -369,19 +342,16 @@ describe("inventory page tests",()=>{
 
     it('visual user: all products have a correct name on their own page',()=>{
         cy.loginAsVisual();
-        cy.resetAppStateButton();
         cy.checkProductNamesOnTheirPage();
     })
 
     it('visual user: all products have a correct description on their own page',()=>{
         cy.loginAsVisual();
-        cy.resetAppStateButton();
         cy.checkProductDescriptionOnTheirPage();
     })
 
     it('visual user: all products have correct price on their own page',()=>{
         cy.loginAsVisual();
-        cy.resetAppStateButton();
         cy.checkProductPriceOnTheirPage();
     })
 
@@ -391,7 +361,7 @@ describe("inventory page tests",()=>{
         cy.checkAddToCartButtonOnProductPage();
     })
 
-// performance glitch user (not finished)
+// performance glitch user 
     it("performance glitch user: all buttons on the side bar menu work correctly",()=>{
         cy.loginAsPerformance();
         cy.checkSideBar();
@@ -399,31 +369,26 @@ describe("inventory page tests",()=>{
 
     it("performance glitch user: all products exist and are visible",()=>{
         cy.loginAsPerformance();
-        cy.resetAppStateButton();
         cy.productsVisible();
     })
 
     it("performance glitch user: all products have correct names ",()=>{
         cy.loginAsPerformance();
-        cy.resetAppStateButton();
         cy.correctNames();
     })
 
     it("performance glitch user: all products have correct description",()=>{
         cy.loginAsPerformance();
-        cy.resetAppStateButton();
         cy.correctDesc();
     })
 
     it("performance glitch user: all products have correct prices ",()=>{
         cy.loginAsPerformance();
-        cy.resetAppStateButton();
         cy.correctPrices();
     })
 
     it('performance glitch user: all products have correct images',()=>{
         cy.loginAsPerformance();
-        cy.resetAppStateButton();
         cy.correctImages();
     })
 
@@ -464,19 +429,16 @@ describe("inventory page tests",()=>{
 
     it('performance glitch user: all products have a correct name on their own page',()=>{
         cy.loginAsPerformance();
-        cy.resetAppStateButton();
         cy.checkProductNamesOnTheirPage();
     })
 
     it('performance glitch user: all products have a correct description on their own page',()=>{
         cy.loginAsPerformance();
-        cy.resetAppStateButton();
         cy.checkProductDescriptionOnTheirPage();
     })
 
     it('performance glitch user: all products have correct price on their own page',()=>{
         cy.loginAsPerformance();
-        cy.resetAppStateButton();
         cy.checkProductPriceOnTheirPage();
     })
 
