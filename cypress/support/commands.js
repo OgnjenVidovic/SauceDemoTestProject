@@ -95,6 +95,24 @@ Cypress.Commands.add('CartElementsExistVisible',()=>{
         cy.get('[data-test="footer-copy"]').should("exist").should("be.visible");
 })
 
+Cypress.Commands.add('CheckoutElementsExistVisible',()=>{
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        cy.get("#checkout").click();
+        cy.url().should('eq','https://www.saucedemo.com/checkout-step-one.html');
+        cy.xpath("//span[@class='title']").should('exist').should("be.visible").should("contain","Checkout: Your Information");
+        cy.get("#first-name").should('exist').should("be.visible").should("have.attr","placeholder","First Name");
+        cy.get("#last-name").should('exist').should("be.visible").should("have.attr","placeholder","Last Name");
+        cy.get("#postal-code").should('exist').should("be.visible").should("have.attr","placeholder","Zip/Postal Code");
+        cy.get("#cancel").should('exist').should("be.visible").should("contain","Cancel");
+        cy.get("#continue").should('exist').should("be.visible").should("contain","Continue");
+        cy.get('[data-test="social-linkedin"]').should('exist').should("be.visible").should("have.attr","href","https://www.linkedin.com/company/sauce-labs/");
+        cy.get('[data-test="social-twitter"]').should('exist').should("be.visible").should("have.attr","href","https://twitter.com/saucelabs");
+        cy.get('[data-test="social-facebook"]').should('exist').should("be.visible").should("have.attr","href","https://www.facebook.com/saucelabs");
+        cy.get('[class="footer_copy"]').should('exist').should("be.visible").should("contain","©").should("contain","2026").should("contain","Sauce Labs. All Rights Reserved. Terms of Service | Privacy Policy");
+        cy.xpath("//div[@class='app_logo']").should('exist').should("be.visible").should("contain","Swag Labs");
+        cy.xpath("//a[@class='shopping_cart_link']").should('exist').should("be.visible");
+})
+
 Cypress.Commands.add('correctNames',()=>{
         cy.fixture("inventory.json").then((inventory)=>{
                 cy.get(".inventory_item_name").then(($el)=>{
@@ -438,6 +456,29 @@ Cypress.Commands.add('checkSideBar',()=>{
 
 })
 
+Cypress.Commands.add('checkSideBarCart',()=>{
+
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+
+        cy.get("#react-burger-menu-btn").click();
+        cy.get("#about_sidebar_link").should("have.attr", "href").and("include", "saucelabs.com");
+        cy.get("#react-burger-cross-btn").click();
+
+        cy.get("#react-burger-menu-btn").click();
+        cy.get("#inventory_sidebar_link").click();
+        
+        cy.url().should("eq","https://www.saucedemo.com/inventory.html");
+
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        
+        cy.resetAppStateButton();
+        
+        cy.reload();
+
+        cy.get('div.cart_item').should("not.exist");
+
+})
+
 Cypress.Commands.add('AddAllToCartFromProductPages',()=>{
         cy.get("#react-burger-menu-btn").click();
         cy.get("#reset_sidebar_link").click();
@@ -533,4 +574,29 @@ Cypress.Commands.add('CheckRemovingFromCart',()=>{
             })
         })
         cy.get('div.cart_item').should("not.exist");
+})
+
+Cypress.Commands.add('CartCheckoutButton',()=>{
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        cy.get('[data-test="checkout"]').should("exist").should("be.visible").click();
+        cy.url().should("eq","https://www.saucedemo.com/checkout-step-one.html");
+})
+
+Cypress.Commands.add('CartContinueShoppingButton',()=>{
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        cy.url().should('eq','https://www.saucedemo.com/cart.html');
+})
+
+Cypress.Commands.add('CartIconClick',()=>{
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        cy.get('[data-test="continue-shopping"]').should("exist").should("be.visible").click();
+        cy.url().should("eq","https://www.saucedemo.com/inventory.html");
+})
+
+Cypress.Commands.add('FillOutCheckoutForm',()=>{
+        cy.get("#first-name").type("John");
+        cy.get("#last-name").type("Doe");
+        cy.get("#postal-code").type("1738");
+        cy.get("#continue").click();
+        cy.url().should('eq',"https://www.saucedemo.com/checkout-step-two.html");
 })

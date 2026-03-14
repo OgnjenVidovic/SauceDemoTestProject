@@ -13,12 +13,12 @@ describe("inventory page tests",()=>{
     });
    
 // standard user
-    it("standard user: all buttons on the side bar menu work correctly",()=>{
+    it.only("standard user: all buttons on the side bar menu work correctly",()=>{
         cy.loginAsStandard();
         cy.checkSideBar();
     })
 
-    it.only("standard user: all elements exist and are visible",()=>{
+    it("standard user: all elements exist and are visible",()=>{
         cy.loginAsStandard();
         cy.elementsExistVisible();
         
@@ -42,6 +42,12 @@ describe("inventory page tests",()=>{
     it('standard user: all products have correct images',()=>{
         cy.loginAsStandard();
         cy.correctImages();
+    })
+
+    it("standard user: cart icon redirects to cart page",()=>{
+        cy.loginAsStandard();
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        cy.url().should('eq','https://www.saucedemo.com/cart.html');
     })
 
     it('standard user: all products have a functional "add to cart" button/"remove" button',()=>{           
@@ -131,6 +137,12 @@ describe("inventory page tests",()=>{
         cy.correctImages();
     })
 
+    it("problem user: cart icon redirects to cart page",()=>{
+        cy.loginAsProblem();
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        cy.url().should('eq','https://www.saucedemo.com/cart.html');
+    })
+
     it('problem user: all products have a functional "add to cart button"/"remove" button',()=>{           
         cy.loginAsProblem();
         cy.resetAppStateButton();
@@ -216,6 +228,12 @@ describe("inventory page tests",()=>{
     it('error user: all products have correct images',()=>{
         cy.loginAsError();
         cy.correctImages();
+    })
+
+    it("error user: cart icon redirects to cart page",()=>{
+        cy.loginAsError();
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        cy.url().should('eq','https://www.saucedemo.com/cart.html');
     })
 
     it('error user: all products have a functional "add to cart button"/"remove" button',()=>{           
@@ -305,6 +323,12 @@ describe("inventory page tests",()=>{
         cy.correctImages();
     })
 
+    it("visual user: cart icon redirects to cart page",()=>{
+        cy.loginAsVisual();
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        cy.url().should('eq','https://www.saucedemo.com/cart.html');
+    })
+
     it('visual user: all products have a functional "add to cart button"/"remove" button',()=>{           
         cy.loginAsVisual();
         cy.resetAppStateButton();
@@ -390,6 +414,12 @@ describe("inventory page tests",()=>{
     it('performance glitch user: all products have correct images',()=>{
         cy.loginAsPerformance();
         cy.correctImages();
+    })
+
+    it("performance glitch user: cart icon redirects to cart page",()=>{
+        cy.loginAsPerformance();
+        cy.xpath("//a[@class='shopping_cart_link']").click();
+        cy.url().should('eq','https://www.saucedemo.com/cart.html');
     })
 
     it('performance glitch user: all products have a functional "add to cart button"/"remove" button',()=>{           

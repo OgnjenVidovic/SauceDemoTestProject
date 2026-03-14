@@ -1,4 +1,4 @@
-describe("login tests",()=>{
+describe("cart page tests",()=>{
     beforeEach(()=>{
         cy.visit("https://www.saucedemo.com/");    
     })
@@ -16,6 +16,21 @@ describe("login tests",()=>{
         cy.resetAppStateButton();
         cy.xpath("//a[@class='shopping_cart_link']").click();
         cy.CartElementsExistVisible();
+    })
+
+    it('standard user: "Continue Shopping" button  redirects to Inventory page',()=>{
+        cy.loginAsStandard();
+        cy.CartContinueShoppingButton();
+    })
+
+    it('standard user: "Checkout" button  redirects to Checkout page',()=>{
+        cy.loginAsStandard();
+        cy.CartCheckoutButton();
+    })
+
+    it("standard user: all buttons on the side bar menu work correctly",()=>{
+        cy.loginAsStandard();
+        cy.checkSideBarCart();
     })
 
     it('standard user: all products can be added to cart from inventory page and are displayed in correct order on cart page',()=>{
@@ -87,6 +102,21 @@ describe("login tests",()=>{
         cy.CartElementsExistVisible();
     })
 
+    it('problem user: "Continue Shopping" button  redirects to Inventory page',()=>{
+        cy.loginAsProblem();
+        cy.CartContinueShoppingButton();
+    })
+
+    it('problem user: "Checkout" button  redirects to Checkout page',()=>{
+        cy.loginAsProblem();
+        cy.CartCheckoutButton();
+    })
+
+    it("problem user: all buttons on the side bar menu work correctly",()=>{
+        cy.loginAsProblem();
+        cy.checkSideBarCart();
+    })
+
     it('problem user: all products can be added to cart from inventory page and are displayed in correct order on cart page',()=>{
         cy.loginAsProblem();
         cy.resetAppStateButton();
@@ -154,6 +184,21 @@ describe("login tests",()=>{
         cy.resetAppStateButton();
         cy.xpath("//a[@class='shopping_cart_link']").click();
         cy.CartElementsExistVisible();
+    })
+
+    it('error user: "Continue Shopping" button  redirects to Inventory page',()=>{
+        cy.loginAsError();
+        cy.CartContinueShoppingButton();
+    })
+
+    it('error user: "Checkout" button  redirects to Checkout page',()=>{
+        cy.loginAsError();
+        cy.CartCheckoutButton();
+    })
+
+    it("error user: all buttons on the side bar menu work correctly",()=>{
+        cy.loginAsError();
+        cy.checkSideBarCart();
     })
 
     it('error user: all products can be added to cart from inventory page and are displayed in correct order on cart page',()=>{
@@ -225,6 +270,21 @@ describe("login tests",()=>{
         cy.CartElementsExistVisible();
     })
 
+    it('visual user: "Continue Shopping" button  redirects to Inventory page',()=>{
+        cy.loginAsVisual();
+        cy.CartContinueShoppingButton();
+    })
+
+    it('visual user: "Checkout" button  redirects to Checkout page',()=>{
+        cy.loginAsVisual();
+        cy.CartCheckoutButton();
+    })
+
+    it("visual user: all buttons on the side bar menu work correctly",()=>{
+        cy.loginAsVisual();
+        cy.checkSideBarCart();
+    })
+
     it('visual user: all products can be added to cart from inventory page and are displayed in correct order on cart page',()=>{
         cy.loginAsVisual();
         cy.resetAppStateButton();
@@ -287,11 +347,26 @@ describe("login tests",()=>{
         cy.CheckElementsInCart('.cart_item .inventory_item_price','price');
     })
 // performance glitch user 
-    it.only("performance glitch user: all elements exist and are visible on the cart page",()=>{
+    it("performance glitch user: all elements exist and are visible on the cart page",()=>{
         cy.loginAsPerformance();
         cy.resetAppStateButton();
         cy.xpath("//a[@class='shopping_cart_link']").click();
         cy.CartElementsExistVisible({setTimeout:20000});
+    })
+
+    it('performance glitch user: "Continue Shopping" button  redirects to Inventory page',()=>{
+        cy.loginAsPerformance();
+        cy.CartContinueShoppingButton();
+    })
+
+    it('performance glitch user: "Checkout" button  redirects to Checkout page',()=>{
+        cy.loginAsPerformance();
+        cy.CartCheckoutButton();
+    })
+
+    it("performance glitch user: all buttons on the side bar menu work correctly",()=>{
+        cy.loginAsPerformance();
+        cy.checkSideBarCart();
     })
 
     it('performance glitch user: all products can be added to cart from inventory page and are displayed in correct order on cart page',()=>{

@@ -7,10 +7,11 @@ describe("smoke tests",()=>{
         cy.visit("https://www.saucedemo.com/");
     })
 
-    it("site loaded",()=>{
+    it("site loads successfully",()=>{
         cy.url().should("include","https://www.saucedemo.com/");
         cy.title().should("contain","Swag Labs");
     })
+
     it("basic elements exist and are visible",()=>{
         
         cy.get('#user-name').should("exist").should("be.visible");
